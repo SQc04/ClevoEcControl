@@ -9,7 +9,9 @@
     <StartupObject>Program</StartupObject>
     <PlatformTarget>x86</PlatformTarget>
 	<UseWindowsForms>true</UseWindowsForms>
-	<BaseOutputPath>D:\I\FAIRING STUDIO\FSSoftware\FSGarvityTool\ClevoEcControl\bin\Allx86</BaseOutputPath>
+    <BaseOutputPath>D:\I\FAIRING STUDIO\FSSoftware\FSGarvityTool\ClevoEcControl\bin\Allx86</BaseOutputPath>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
