@@ -50,7 +50,7 @@ class Program
         int duty = BitConverter.ToInt32(dutyBytes, 0);
         return duty;
     }
-    public static void SendDataToEcdataClient(NamedPipeServerStream server, ECData data)
+    public static void SendDataToEcdataClient(NamedPipeServerStream server, ECData data,int fan_id)
     {
         byte[] remoteBytes = new byte[] { data.Remote };
         byte[] localBytes = new byte[] { data.Local };
@@ -60,7 +60,7 @@ class Program
         server.Write(localBytes, 0, localBytes.Length);
         server.Write(fanDutyBytes, 0, fanDutyBytes.Length);
         server.Write(reserveBytes, 0, reserveBytes.Length);
-        Console.WriteLine($"Remote: {data.Remote}" + "\r\n" + $"Remote: {data.Local}" + "\r\n" + $"Remote: {data.FanDuty}" + "\r\n" + $"Remote: {data.Reserve}");
+        Console.WriteLine("Fan" + fan_id.ToString() + "    " + $"Temp: {data.Remote}" + "    " + $"Local: {data.Local}" + "    " + $"FanDuty: {data.FanDuty}");
         server.Dispose();
     }
     public static void SendDataToClient(NamedPipeServerStream server, byte[] data)
@@ -124,6 +124,14 @@ class Program
 
         var handlers = new Dictionary<string, Action<string>>
         {
+            { "ClevoEcPipeTestConnect", server =>
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("ClevoEcPipeTestConnect");
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                }
+            },
             { "ClevoEcPipeInitTo", server =>
                 {
                     byte[] infoBytes = BitConverter.GetBytes(isInitialized);
@@ -191,7 +199,7 @@ class Program
                     var server1 = new NamedPipeServerStream(server);
                     int fan_id = ReadDataToEcdataClient(server1);
                     ECData data = ClevoEcInfo.GetTempFanDuty(fan_id);
-                    SendDataToEcdataClient(server1, data);
+                    SendDataToEcdataClient(server1, data, fan_id);
                 }
             },
             { "ClevoEcPiceSetFanDuty",server =>
@@ -199,7 +207,9 @@ class Program
                     var server1 = new NamedPipeServerStream(server);
                     int fan_id = ReadDataToEcdataClient(server1);
                     int duty = ReadDataFanDutyClient(server1);
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
                     Console.WriteLine("Fan" + fan_id.ToString()+ "RpmDuty: " + duty.ToString());
+                    Console.ForegroundColor = ConsoleColor.White;
                     ClevoEcInfo.SetFanDuty(fan_id, duty);
                     server1.Dispose();
                 }
@@ -219,7 +229,9 @@ class Program
         {
             using (var server = new NamedPipeServerStream("ClevoEcPipe"))
             {
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("Wait request...");
+                Console.ForegroundColor = ConsoleColor.White;
                 server.WaitForConnection();
                 // 读取请求类型
                 byte[] requestTypeBytes = new byte[128];
