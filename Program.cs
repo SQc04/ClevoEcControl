@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using ClevoEcControl;
+﻿
 using System.IO.Pipes;
 using System.Text;
 using System;
@@ -8,121 +7,123 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-class Program
+namespace ClevoEcControl
 {
-    /*
-    static Form form = new Form();
-
-    [DllImport("kernel32.dll")]
-    static extern IntPtr GetConsoleWindow();
-
-    [DllImport("user32.dll")]
-    static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-    const int SW_HIDE = 0;
-    const int SW_SHOW = 5;
-
-    static NotifyIcon notifyIcon;
-
-    [DllImport("user32.dll")]
-    static extern bool IsWindowVisible(IntPtr hWnd);
-
-    static void ExitApplication()
+    class Program
     {
-        notifyIcon.Dispose();
-        Environment.Exit(0);  // 0 表示正常退出
-    }
-    */
-    public static int ReadDataToEcdataClient(NamedPipeServerStream server)
-    {
-        server.WaitForConnection();
-        // 读取 fan_id
-        byte[] fanIdBytes = new byte[4];
-        int bytesRead = server.Read(fanIdBytes, 0, fanIdBytes.Length);
-        int fan_id = BitConverter.ToInt32(fanIdBytes, 0);
-        return fan_id;
-    }
-    public static int ReadDataFanDutyClient(NamedPipeServerStream server)
-    {
-        // 读取 duty
-        byte[] dutyBytes = new byte[4];
-        int bytesRead = server.Read(dutyBytes, 0, dutyBytes.Length);
-        int duty = BitConverter.ToInt32(dutyBytes, 0);
-        return duty;
-    }
-    public static void SendDataToEcdataClient(NamedPipeServerStream server, ECData data,int fan_id)
-    {
-        byte[] remoteBytes = new byte[] { data.Remote };
-        byte[] localBytes = new byte[] { data.Local };
-        byte[] fanDutyBytes = new byte[] { data.FanDuty };
-        byte[] reserveBytes = new byte[] { data.Reserve };
-        server.Write(remoteBytes, 0, remoteBytes.Length);
-        server.Write(localBytes, 0, localBytes.Length);
-        server.Write(fanDutyBytes, 0, fanDutyBytes.Length);
-        server.Write(reserveBytes, 0, reserveBytes.Length);
-        Console.WriteLine("Fan" + fan_id.ToString() + "    " + $"Temp: {data.Remote}" + "    " + $"Local: {data.Local}" + "    " + $"FanDuty: {data.FanDuty}");
-        server.Dispose();
-    }
-    public static void SendDataToClient(NamedPipeServerStream server, byte[] data)
-    {
-        server.WaitForConnection();
-        server.Write(data, 0, data.Length);
-        server.Dispose();
-    }
-
-    public static void SendFanRpmToClient(string pipeName, Func<int> getFanRpm)
-    {
-        using (var server = new NamedPipeServerStream(pipeName))
-        {
-            server.WaitForConnection();
-            int fanRpm = getFanRpm();
-            byte[] fanRpmBytes = BitConverter.GetBytes(fanRpm);
-            SendDataToClient(server, fanRpmBytes);
-        }
-    }
-
-    public static void Main(string[] args)
-    {
-        //notifyIcon = new NotifyIcon();
-        //notifyIcon.Icon = new Icon("FSFSoftH.ico");
-        //notifyIcon.Visible = true;
-
-        //var contextMenu = new ContextMenuStrip();
-        //var exitMenuItem = new ToolStripMenuItem("退出");
-
-        //exitMenuItem.Click += (sender, e) => ExitApplication();
-
-        //contextMenu.Items.Add(exitMenuItem);
-
-        //notifyIcon.ContextMenuStrip = contextMenu;
         /*
-        Console.CancelKeyPress += (sender, e) =>
+        static Form form = new Form();
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+
+        static NotifyIcon notifyIcon;
+
+        [DllImport("user32.dll")]
+        static extern bool IsWindowVisible(IntPtr hWnd);
+
+        static void ExitApplication()
         {
             notifyIcon.Dispose();
-        };
+            Environment.Exit(0);  // 0 表示正常退出
+        }
         */
-        Process[] processes = Process.GetProcessesByName("ClevoEcControlWatchDog");
-        if (processes.Length == 0)
+        public static int ReadDataToEcdataClient(NamedPipeServerStream server)
         {
-            // 如果 ClevoEcControl.exe 没有运行，那么启动它
-            Process.Start("ClevoEcControlWatchDog.exe");
-            //Process.Start("D:\\I\\FAIRING STUDIO\\FSSoftware\\FSGarvityTool\\ClevoEcControl\\bin\\Debug\\net6.0-windows10.0.22000.0\\ClevoEcControl.exe");
+            server.WaitForConnection();
+            // 读取 fan_id
+            byte[] fanIdBytes = new byte[4];
+            int bytesRead = server.Read(fanIdBytes, 0, fanIdBytes.Length);
+            int fan_id = BitConverter.ToInt32(fanIdBytes, 0);
+            return fan_id;
+        }
+        public static int ReadDataFanDutyClient(NamedPipeServerStream server)
+        {
+            // 读取 duty
+            byte[] dutyBytes = new byte[4];
+            int bytesRead = server.Read(dutyBytes, 0, dutyBytes.Length);
+            int duty = BitConverter.ToInt32(dutyBytes, 0);
+            return duty;
+        }
+        public static void SendDataToEcdataClient(NamedPipeServerStream server, ECData data, int fan_id)
+        {
+            byte[] remoteBytes = new byte[] { data.Remote };
+            byte[] localBytes = new byte[] { data.Local };
+            byte[] fanDutyBytes = new byte[] { data.FanDuty };
+            byte[] reserveBytes = new byte[] { data.Reserve };
+            server.Write(remoteBytes, 0, remoteBytes.Length);
+            server.Write(localBytes, 0, localBytes.Length);
+            server.Write(fanDutyBytes, 0, fanDutyBytes.Length);
+            server.Write(reserveBytes, 0, reserveBytes.Length);
+            Console.WriteLine("Fan" + fan_id.ToString() + "    " + $"Temp: {data.Remote}" + "    " + $"Local: {data.Local}" + "    " + $"FanDuty: {data.FanDuty}");
+            server.Dispose();
+        }
+        public static void SendDataToClient(NamedPipeServerStream server, byte[] data)
+        {
+            server.WaitForConnection();
+            server.Write(data, 0, data.Length);
+            server.Dispose();
         }
 
-        bool isInitialized = ClevoEcInfo.InitIo();
-
-        if (!isInitialized)
+        public static void SendFanRpmToClient(string pipeName, Func<int> getFanRpm)
         {
-            Console.WriteLine("Failed to initialize IO.");
-            return;
-        }
-        else
-        {
-            Console.WriteLine(isInitialized.ToString());
-            Console.WriteLine("Server is running");
+            using (var server = new NamedPipeServerStream(pipeName))
+            {
+                server.WaitForConnection();
+                int fanRpm = getFanRpm();
+                byte[] fanRpmBytes = BitConverter.GetBytes(fanRpm);
+                SendDataToClient(server, fanRpmBytes);
+            }
         }
 
-        var handlers = new Dictionary<string, Action<string>>
+        public static void Main(string[] args)
+        {
+            //notifyIcon = new NotifyIcon();
+            //notifyIcon.Icon = new Icon("FSFSoftH.ico");
+            //notifyIcon.Visible = true;
+
+            //var contextMenu = new ContextMenuStrip();
+            //var exitMenuItem = new ToolStripMenuItem("退出");
+
+            //exitMenuItem.Click += (sender, e) => ExitApplication();
+
+            //contextMenu.Items.Add(exitMenuItem);
+
+            //notifyIcon.ContextMenuStrip = contextMenu;
+            /*
+            Console.CancelKeyPress += (sender, e) =>
+            {
+                notifyIcon.Dispose();
+            };
+            */
+            Process[] processes = Process.GetProcessesByName("ClevoEcControlWatchDog");
+            if (processes.Length == 0)
+            {
+                // 如果 ClevoEcControl.exe 没有运行，那么启动它
+                Process.Start("ClevoEcControlWatchDog.exe");
+                //Process.Start("D:\\I\\FAIRING STUDIO\\FSSoftware\\FSGarvityTool\\ClevoEcControl\\bin\\Debug\\net6.0-windows10.0.22000.0\\ClevoEcControl.exe");
+            }
+
+            bool isInitialized = ClevoEcInfo.InitIo();
+
+            if (!isInitialized)
+            {
+                Console.WriteLine("Failed to initialize IO.");
+                return;
+            }
+            else
+            {
+                Console.WriteLine(isInitialized.ToString());
+                Console.WriteLine("Server is running");
+            }
+
+            var handlers = new Dictionary<string, Action<string>>
         {
             { "ClevoEcPipeTestConnect", server =>
                 {
@@ -222,35 +223,93 @@ class Program
                     ClevoEcInfo.SetFANDutyAuto(fan_id);
                     server1.Dispose();
                 }
-            }
+            },
+            { "WatchDogInitTo",server =>
+                {
+                    var server1 = new NamedPipeServerStream(server);
+                    bool watchDoginfo;
+                    Process[] processes = Process.GetProcessesByName("ClevoEcControlWatchDog");
+                    if (processes.Length == 0)
+                    {
+                        //如果 ClevoEcControl.exe 没有运行，那么启动它
+                        //Process.Start("ClevoEcControlWatchDog.exe");
+                        //Process.Start("D:\\I\\FAIRING STUDIO\\FSSoftware\\FSGarvityTool\\ClevoEcControl\\bin\\Allx86\\Debug\\ClevoEcControl.exe");
+                        watchDoginfo = false;
+                    }
+                    else
+                    {
+                        watchDoginfo = true;
+                    }
+                    byte[] watchDoginfoBytes = BitConverter.GetBytes(watchDoginfo);
+                    SendDataToClient(server1, watchDoginfoBytes);
+                }
+            },
+            { "WatchDogClose",server =>
+                {
+                    Process[] processes = Process.GetProcessesByName("ClevoEcControlWatchDog");
+                    if (processes.Length > 0)
+                    {
+                        //如果 ClevoEcControlWatchDog.exe 正在运行，那么关闭它
+                        foreach (var process in processes)
+                        {
+                            process.Kill();
+                        }
+                    }
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("WatchDogClose");
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                }
+            },
+            { "WatchDogStart",server =>
+                {
+                    Process[] processes = Process.GetProcessesByName("ClevoEcControlWatchDog");
+                    if (processes.Length == 0)
+                    {
+                        //如果 ClevoEcControl.exe 没有运行，那么启动它
+                        Process.Start("ClevoEcControlWatchDog.exe");
+
+                    }
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    Console.WriteLine("WatchDogStart");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            },
+            /*
+            { "",server =>
+                {
+
+                }
+            },
+            */
         };
-        Console.WriteLine("Start Clevo Fan Control V1.0");
-        while (isInitialized) // 死循环开始
-        {
-            using (var server = new NamedPipeServerStream("ClevoEcPipe"))
+            Console.WriteLine("Start Clevo Fan Control V1.1");
+            while (isInitialized) // 死循环开始
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("Wait request...");
-                Console.ForegroundColor = ConsoleColor.White;
-                server.WaitForConnection();
-                // 读取请求类型
-                byte[] requestTypeBytes = new byte[128];
-                int bytesRead = server.Read(requestTypeBytes, 0, requestTypeBytes.Length);
-                string requestType = Encoding.UTF8.GetString(requestTypeBytes, 0, bytesRead);
-                Console.WriteLine("Request is " + requestType);
-                // 处理请求
-                if (handlers.TryGetValue(requestType, out var handler))
+                using (var server = new NamedPipeServerStream("ClevoEcPipe"))
                 {
-                    handler(requestType);
-                }
-                else
-                {
-                    Console.WriteLine($"Unknown request type: {requestType}");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("Wait request...");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    server.WaitForConnection();
+                    // 读取请求类型
+                    byte[] requestTypeBytes = new byte[128];
+                    int bytesRead = server.Read(requestTypeBytes, 0, requestTypeBytes.Length);
+                    string requestType = Encoding.UTF8.GetString(requestTypeBytes, 0, bytesRead);
+                    Console.WriteLine("Request is " + requestType);
+                    // 处理请求
+                    if (handlers.TryGetValue(requestType, out var handler))
+                    {
+                        handler(requestType);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Unknown request type: {requestType}");
+                    }
                 }
             }
+            //notifyIcon.Dispose();
         }
-        //notifyIcon.Dispose();
+
     }
-
-
 }
