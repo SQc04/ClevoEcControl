@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <PlatformTarget>x86</PlatformTarget>
-	<UseWindowsForms>true</UseWindowsForms>
+	<UseWindowsForms>False</UseWindowsForms>
     <BaseOutputPath>D:\I\FAIRING STUDIO\FSSoftware\FSGarvityTool\ClevoEcControl\bin\Allx86</BaseOutputPath>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>

@@ -1,10 +1,6 @@
 ﻿
 using System.IO.Pipes;
 using System.Text;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 
 namespace ClevoEcControl
